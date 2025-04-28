@@ -36,9 +36,10 @@ export class userController {
 
     async loginUser(req:Request, res: Response){
         try {
-            const {emal, password }= req.body
-            const jwtToken = await this.userservice.loginUser(emal, password)
-            res.status(200).json({success: true, message:"Login Sucessfully completed",jwtToken})
+            const {email, password }= req.body
+            const data = await this.userservice.loginUser(email, password)
+            console.log("data willget from the login",data)
+            res.status(200).json({success: true, message:"Login Sucessfully completed",data})
 
         } catch (error) {
             res.status(400).json({sucess:false, message:(error as Error).message})

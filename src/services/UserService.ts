@@ -44,10 +44,12 @@ export  class userService {
 
     // for login  user
 
-    async loginUser(email:string , password:string):Promise<string>{
+    async loginUser(email:string , password:string):Promise<object>{
+        console.log(email,password)
         const user = await this.userRepository.findByEmail(email)
+        console.log("data in the database",user)
 
-        if(!user ){
+        if(!user){
             throw new Error ('Invalid Email or Password')
         }
 
@@ -59,7 +61,7 @@ export  class userService {
 
         const jwtToken = generateToken({userid:user._id, email:user.email,is_admin:user.is_admin})
 
-        return jwtToken;
+        return {user,jwtToken};
     }
  
 

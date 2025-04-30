@@ -15,4 +15,17 @@ export class UserRepository {
         const user = new User(userData);
         return  await user.save();
     }
+
+    async updateProfilePicture(userId: string, profilePicture: string): Promise<userInterface | null> {
+        console.log("update profile repos works",userId)
+        return await User.findByIdAndUpdate(
+          userId,
+          { profile: profilePicture }, 
+          { new: true }
+        );
+    }
+
+      
+
+
 }

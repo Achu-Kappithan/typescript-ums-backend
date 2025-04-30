@@ -1,7 +1,7 @@
 import { userInterface } from "../interfaces/userInterface";
 import { UserRepository } from "../repositry/UserRepository";
 import bcrypt from 'bcrypt';
-import { generateToken } from "../utils/jwthelper";
+import { generateToken } from "../utils/jwtHelper";
 
 
 
@@ -58,14 +58,28 @@ export  class userService {
         if(!isPassword){
             throw new Error ('Invalid Email or Password')
         }
-
         const jwtToken = generateToken({userid:user._id, email:user.email,is_admin:user.is_admin})
 
         return {user,jwtToken};
     }
- 
 
 
+    async updateProfilePicture(userId: string, file: Express.Multer.File): Promise<userInterface> {
+        if (!file) {
+          throw new Error('No file uploaded');
+        }
+        const profilePicture = `src/uploads/${file.filename}`;
+        console.log("profilename",profilePicture)
+    
+        const updatedUser = await this.userRepository.updateProfilePicture(userId, profilePicture);
+        console.log("responce from the db in service file",updatedUser)
+    
+        if (!updatedUser) {
+          throw new Error('User not found');
+        }
+    
+        return updatedUser;
+      }
 
 
 }

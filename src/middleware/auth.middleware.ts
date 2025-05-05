@@ -8,9 +8,7 @@ export interface AuthRequest extends Request {
 export const authenticateToken = (req: AuthRequest, res: Response, next: NextFunction): void => {
 
   console.log("auth middleware works")
-  console.log('Request Headers:', req.headers); 
   const authHeader = req.headers['authorization'];
-  console.log('Authorization Header:', authHeader); 
   const token = authHeader && authHeader.split(' ')[1];
   console.log('Extracted Token:', token); 
 

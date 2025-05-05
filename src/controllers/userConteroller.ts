@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { userService } from "../services/UserService";
 import { AuthRequest } from "../middleware/auth.middleware";
+import { userInterface } from "../interfaces/userInterface";
 
 
 export class userController {
@@ -37,12 +38,9 @@ export class userController {
     // for  login 
 
     async loginUser(req:Request, res: Response){
-        console.log("works")
-        console.dir(req.headers,{depth:null},)
         try {
             const {email, password }= req.body
             const data = await this.userservice.loginUser(email, password)
-            console.log("data willget from the login",data)
             res.status(200).json({success: true, message:"Login Sucessfully completed",data})
 
         } catch (error) {
@@ -50,6 +48,7 @@ export class userController {
         }
     }
 
+    // for update profile
 
     async updateProfilePicture(req: AuthRequest, res: Response): Promise<void> {
         try {
@@ -71,9 +70,33 @@ export class userController {
     
           const updatedUser = await this.userservice.updateProfilePicture(userId, file);
           console.log("data in controller,",updatedUser)
-          res.status(200).json({ profilePictureUrl:`http://localhost:3001/${updatedUser.profile}`, message: 'Profile picture updated successfully' });
+          res.status(200).json({ profilePictureUrl:updatedUser.profile, message: 'Profile picture updated successfully' });
         } catch (error: any) {
           res.status(400).json({ message: error.message });
         }
       }
+
+      async getLogInUser(req: AuthRequest, res: Response){
+        console.log("fetch user profile working")
+        const userId = req.user?.userid;
+        try {
+          if (!userId) {
+            return res.status(401).json({ message: 'Unauthorized: No user ID found' });
+          }
+      
+          const user = await this.userservice.getUserDetails(userId);
+
+          console.log("responce data controller",{user:user})
+      
+          if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+          }
+      
+          res.json({ user });
+        } catch (error) {
+          console.error('Error fetching user:', error);
+          res.status(500).json({ message: 'Internal server error' });
+        }
+      }
+      
 }

@@ -25,6 +25,12 @@ export class UserRepository {
         );
     }
 
+    async findbyId(userId:string):Promise<userInterface | null>{
+        return await User.findById({_id:userId})
+    }
+
+ 
+
       
 
 
